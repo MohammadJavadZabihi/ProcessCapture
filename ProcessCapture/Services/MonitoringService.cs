@@ -11,10 +11,23 @@ namespace ProcessCapture.Services
         private Dictionary<string, string> resultOfProgram = new Dictionary<string, string>();
         public event Action<Dictionary<string, string>> OnCaptureCompleted;
 
+
+        /// <summary>
+        /// Retrieves a list of available network capture devices.
+        /// </summary>
+        /// <returns>
+        /// Adaptors, example : OpenVpn Adaptor, Local Area Connection, Etherenet4, ...
+        /// </returns>
+        
         public CaptureDeviceList GetCaptureDevices()
         {
             return CaptureDeviceList.Instance;
         }
+
+
+        /// <summary>
+        ///  Gets local IP addresses from ipconfig command.
+        /// </summary>
 
         public List<string> GetLocalIpAddress()
         {
@@ -46,6 +59,14 @@ namespace ProcessCapture.Services
 
             return ipAddresses;
         }
+
+
+        /// <summary>
+        /// Retrieves process ID by process name.
+        /// </summary>
+        /// <param name="processName"></param>
+        /// <param name="loop">If the loop is true, the loop will repeat until it finally finds the process. Otherwise, it will only do this once.</param>
+        /// <param name="time">You can set a timeout for any loop that tries to find the process when the process is unavailable or does not exist.</param>
 
         public Dictionary<HashSet<int>, string> GetProcessIdByName(string processName, bool loop = false, int time = 0)
         {
@@ -99,6 +120,11 @@ namespace ProcessCapture.Services
             }
         }
 
+        /// <summary>
+        /// Retrieves network ports used by a set of process IDs.
+        /// </summary>
+        /// <param name="pIds">We pass the ids we obtained from the GetProcessIdByName method to it so that we can obtain the network ports related to the process.</param>
+
         public HashSet<int> GetProcessPortByProcessId(HashSet<int> pIds)
         {
             var processInfo = new ProcessStartInfo
@@ -146,6 +172,12 @@ namespace ProcessCapture.Services
             return ports;
         }
 
+
+        /// <summary>
+        /// Retrieves network ports used by a set of process IDs.
+        /// </summary>
+        /// <param name="pId">Instead of passing a set of process ids, we just pass an id to get the port of a process.</param>
+
         public HashSet<int> GetProcessPortByProcessId(int pId)
         {
             var processInfo = new ProcessStartInfo
@@ -188,6 +220,18 @@ namespace ProcessCapture.Services
 
             return ports;
         }
+
+
+        /// <summary>
+        /// Handles the arrival of network packets and processes them based on the specified criteria.
+        /// This function extracts UDP or TCP packets, retrieves their source and destination IPs and ports,
+        /// and stores the destination IPs in a dictionary if they match the given port conditions.
+        /// </summary>
+        /// <param name="e">The captured network packet.</param>
+        /// <param name="ports">A set of ports to filter the packets.</param>
+        /// <param name="pId">A set of process IDs associated with the packets.</param>
+        /// <param name="processName">The name of the process associated with the packet (optional).</param>
+        /// <param name="pack">The type of packet to process (UDP or TCP). If empty, both are processed.</param>
 
         public void OnPacketArrival(PacketCapture e, HashSet<int>? ports, HashSet<int> pId, string processName = "", string pack = "")
         {
@@ -303,6 +347,15 @@ namespace ProcessCapture.Services
             }
         }
 
+
+        /// <summary>
+        /// Starts capturing network packets for a specific process asynchronously.
+        /// It retrieves the process ID and associated ports, then listens for incoming packets
+        /// from network devices. Captured packets are analyzed and stored based on predefined criteria.
+        /// </summary>
+        /// <param name="processName">The name of the process to monitor.</param>
+        /// <returns>A dictionary containing destination IPs and their associated process names.</returns>
+        
         public async Task<Dictionary<string, string>> StartCaptureAsync(string processName)
         {
             var processInfo = GetProcessIdByName(processName);
@@ -342,6 +395,12 @@ namespace ProcessCapture.Services
             return await captureTaskCompletionSource.Task;
         }
 
+
+        /// <summary>
+        /// Stops the packet capturing process.
+        /// It closes all active network devices and finalizes the captured results.
+        /// </summary>
+        
         public void StopCapture()
         {
             var captureTaskCompletionSource = new TaskCompletionSource<Dictionary<string, string>>();
