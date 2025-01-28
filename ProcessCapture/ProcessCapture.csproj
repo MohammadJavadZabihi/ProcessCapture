@@ -1,15 +1,25 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
-  <PropertyGroup>
-    <TargetFramework>net8.0</TargetFramework>
-    <ImplicitUsings>enable</ImplicitUsings>
-    <Nullable>enable</Nullable>
-  </PropertyGroup>
+	<PropertyGroup>
+		<TargetFramework>net9.0</TargetFramework>
+		<Authors>Mohammad Javad</Authors>
+		<ImplicitUsings>enable</ImplicitUsings>
+		<PackageId>ProcessCapture</PackageId>
+		<Version>1.1.0</Version>
+		<Description>MonitoringService is a service for monitoring network traffic and processes related to a specific application. It uses SharpPcap to
+		capture network packets and PacketDotNet to analyze them. It also 
+		uses system commands such as netstat and ipconfig to obtain network information.</Description>
+		<PackageLicenseExpression>MIT</PackageLicenseExpression>
+		<RepositoryUrl>https://github.com/MohammadJavadZabihi/ProcessCapture</RepositoryUrl>
+		<PackageTags>network capture, monitoring, process tracking</PackageTags>
+		<GeneratePackageOnBuild>true</GeneratePackageOnBuild>
+		<Nullable>enable</Nullable>
+	</PropertyGroup>
 
-  <ItemGroup>
-    <PackageReference Include="PacketDotNet" Version="1.4.7" />
-    <PackageReference Include="SharpPcap" Version="6.3.0" />
-    <PackageReference Include="System.Management" Version="9.0.0" />
-  </ItemGroup>
+	<ItemGroup>
+		<PackageReference Include="PacketDotNet" Version="1.4.7" />
+		<PackageReference Include="SharpPcap" Version="6.3.0" />
+		<PackageReference Include="System.Management" Version="9.0.0" />
+	</ItemGroup>
 
 </Project>
